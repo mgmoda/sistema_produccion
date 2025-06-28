@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Referencias de Producción</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 0 300px 40px 40px;
+      margin: 0;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: #f4f6f8;
+      z-index: 20;
+      padding-top: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin: 10px 0 20px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    thead th {
+      position: sticky;
+      top: 100px; /* debajo del header */
+      background-color: #2c3e50;
+      color: white;
+      z-index: 10;
+    }
+
+    tr:hover {
+      background-color: #eef4fc;
+      cursor: pointer;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: underline;
+    }
+
+    /* Imagen flotante */
+    .img-card {
+      display: none;
+      position: fixed;
+      top: 160px;
+      right: 30px;
+      width: 240px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      padding: 10px;
+      z-index: 1000;
+    }
+
+    .img-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .img-card .close {
+      text-align: right;
+      font-weight: bold;
+      cursor: pointer;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -20%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      z-index: 2000;
+      width: 300px;
+    }
+
+    .modal input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    .modal button {
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Zona fija superior -->
+  <header>
+    <a href="/" class="back-btn">← Volver al inicio</a>
+    <h1>Referencias de Producción</h1>
+  </header>
+
+  <!-- Tabla -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Referencia</th>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+        <th>Pedido Tela</th>
+        <th>Fecha Estampación</th>
+        <th>Días Estampación</th>
+        <th>Editar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ref in referencias %}
+      <tr onclick="mostrarImagen('{{ url_for('static', filename='img/' + ref[1] + '.png') }}')">
+        <td>{{ ref[0] }}</td>
+        <td>{{ ref[1] }}</td>
+        <td>{{ ref[2] }}</td>
+        <td>{{ ref[3] }}</td>
+        <td>{{ ref[4] or '-' }}</td>
+        <td>{{ ref[5] or '-' }}</td>
+        <td>{{ ref[6] if ref[6] is not none else '-' }}</td>
+        <td><a href="#" onclick="abrirModal({{ ref[0] }}, '{{ ref[4] or '' }}', '{{ ref[5] or '' }}'); event.stopPropagation();">Editar</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Imagen flotante -->
+  <div class="img-card" id="imgCard">
+    <div class="close" onclick="cerrarImagen()">×</div>
+    <img id="imgPreview" src="" alt="Imagen de referencia">
+  </div>
+
+  <!-- Modal flotante para edición -->
+  <div class="modal" id="modalEditar">
+    <form method="POST" action="/editar" id="formEditar">
+      <input type="hidden" name="id" id="editId">
+      <label for="pedido_tela">Pedido Tela:</label>
+      <input type="text" name="pedido_tela" id="pedido_tela">
+      <label for="fecha_estampacion">Fecha Estampación:</label>
+      <input type="date" name="fecha_estampacion" id="fecha_estampacion">
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+
+  <script>
+    function mostrarImagen(ruta) {
+      document.getElementById('imgPreview').src = ruta;
+      document.getElementById('imgCard').style.display = 'block';
+    }
+
+    function cerrarImagen() {
+      document.getElementById('imgCard').style.display = 'none';
+    }
+
+    function abrirModal(id, pedido_tela, fecha_estampacion) {
+      document.getElementById('editId').value = id;
+      document.getElementById('pedido_tela').value = pedido_tela;
+      document.getElementById('fecha_estampacion').value = fecha_estampacion;
+      document.getElementById('modalEditar').style.display = 'block';
+    }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === "Escape") {
+        document.getElementById('modalEditar').style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>

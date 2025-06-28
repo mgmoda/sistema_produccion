@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editar Referencia</title>
+</head>
+<body>
+  <h1>Editar Referencia: {{ referencia[1] }}</h1>
+
+  <form method="POST">
+    <label>Pedido Tela:</label><br>
+    <input type="text" name="pedido_tela" value="{{ referencia[4] or '' }}"><br><br>
+
+    <label>Fecha de Estampación:</label><br>
+    <input type="date" name="fecha_estampacion" value="{{ referencia[5] or '' }}"><br><br>
+
+    <input type="submit" value="Guardar Cambios">
+  </form>
+
+  <p><a href="{{ url_for('ver_referencias') }}">Volver</a></p>
+</body>
+</html>
