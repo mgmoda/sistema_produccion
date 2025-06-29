@@ -1,13 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
 # Ruta principal
 @app.route('/')
 def home():
-    return redirect(url_for('ver_referencias'))
+    return redirect(url_for('menu'))
+
+# Menú principal
+@app.route('/menu')
+def menu():
+    return render_template('menu.html')
 
 # Ver todas las referencias
 @app.route('/ver-referencias')
@@ -46,8 +52,7 @@ def actualizar():
 
     return redirect(url_for('ver_referencias'))
 
-import os
-
+# Ejecutar la app
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(debug=False, host='0.0.0.0', port=port)
