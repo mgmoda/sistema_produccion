@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Órdenes de Corte</title>
+</head>
+<body>
+    <h1>Listado de Órdenes de Corte</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Referencia</th>
+            <th>Cantidad</th>
+            <th>Fecha</th>
+        </tr>
+        {% for orden in ordenes %}
+        <tr>
+            <td>{{ orden[0] }}</td>
+            <td>{{ orden[1] }}</td>
+            <td>{{ orden[2] }}</td>
+            <td>{{ orden[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{{ url_for('nueva_orden') }}">+ Nueva Orden</a>
+</body>
+</html>

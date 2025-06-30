@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Orden de Corte</title>
+</head>
+<body>
+    <h1>Crear Nueva Orden de Corte</h1>
+    <form method="POST">
+        <label for="referencia_id">Referencia:</label>
+        <select name="referencia_id" required>
+            {% for ref in referencias %}
+                <option value="{{ ref[0] }}">{{ ref[1] }} - {{ ref[2] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" name="cantidad" required><br><br>
+
+        <label for="observaciones">Observaciones:</label>
+        <input type="text" name="observaciones"><br><br>
+
+        <button type="submit">Crear Orden</button>
+    </form>
+
+    <a href="{{ url_for('ordenes') }}">← Ver Órdenes</a>
+</body>
+</html>
